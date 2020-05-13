@@ -1,0 +1,31 @@
+{
+    "version": "1.0.0",
+    "title": "What is the impact of cluster issues on the application messages to be sent?",
+    "description": "",
+    "secrets": {
+        "ssh": {
+            "remote_addr": "SSH_HOST",
+            "username": "SSH_USERNAME",
+            "password": "SSH_PASSWORD",
+            "port": "SSH_PORT"
+        }
+    },
+    "steady-state-hypothesis": {
+        "title": "RabbitMQ responds",
+        "probes": [
+            {
+                "type": "probe",
+                "name": "the-rabbitmq-service-must-be-running",
+                "tolerance": true,
+                "provider": {
+                    "type": "python",
+                    "module": "rabbitmq",
+                    "secrets": ["ssh"],
+                    "func": "probe_running_rabbitmq_service"
+                }
+            }
+        ]
+    },
+    "method": [
+    ]
+}

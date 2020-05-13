@@ -1,0 +1,99 @@
+{
+  "chaoslib-version": "1.9.0",
+  "platform": "Darwin-19.3.0-x86_64-i386-64bit",
+  "node": "192-168-1-6.tpgi.com.au",
+  "experiment": {
+    "version": "1.0.0",
+    "title": "What is the impact of ",
+    "description": "If a certificate expires, we should gracefully deal with the issue.",
+    "secrets": {
+      "ssh": {
+        "remote_addr": "SSH_HOST",
+        "username": "SSH_USERNAME",
+        "password": "SSH_PASSWORD",
+        "port": "SSH_PORT"
+      }
+    },
+    "steady-state-hypothesis": {
+      "title": "Application responds",
+      "probes": [
+        {
+          "type": "probe",
+          "name": "the-rabbitmq-service-must-be-running",
+          "tolerance": true,
+          "provider": {
+            "type": "python",
+            "module": "rabbitmq",
+            "secrets": [
+              "ssh"
+            ],
+            "func": "probe_running_rabbitmq_service"
+          }
+        }
+      ]
+    },
+    "method": [],
+    "dry": false
+  },
+  "start": "2020-05-13T05:03:44.032759",
+  "status": "completed",
+  "deviated": false,
+  "steady_states": {
+    "before": {
+      "steady_state_met": true,
+      "probes": [
+        {
+          "activity": {
+            "type": "probe",
+            "name": "the-rabbitmq-service-must-be-running",
+            "tolerance": true,
+            "provider": {
+              "type": "python",
+              "module": "rabbitmq",
+              "secrets": [
+                "ssh"
+              ],
+              "func": "probe_running_rabbitmq_service"
+            }
+          },
+          "output": true,
+          "status": "succeeded",
+          "start": "2020-05-13T05:03:44.034908",
+          "end": "2020-05-13T05:03:45.409304",
+          "duration": 1.374396,
+          "tolerance_met": true
+        }
+      ]
+    },
+    "after": {
+      "steady_state_met": true,
+      "probes": [
+        {
+          "activity": {
+            "type": "probe",
+            "name": "the-rabbitmq-service-must-be-running",
+            "tolerance": true,
+            "provider": {
+              "type": "python",
+              "module": "rabbitmq",
+              "secrets": [
+                "ssh"
+              ],
+              "func": "probe_running_rabbitmq_service"
+            }
+          },
+          "output": true,
+          "status": "succeeded",
+          "start": "2020-05-13T05:03:45.410181",
+          "end": "2020-05-13T05:03:46.451019",
+          "duration": 1.040838,
+          "tolerance_met": true
+        }
+      ]
+    }
+  },
+  "run": [],
+  "rollbacks": [],
+  "end": "2020-05-13T05:03:46.451653",
+  "duration": 2.4433279037475586
+}

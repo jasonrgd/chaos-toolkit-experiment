@@ -1,0 +1,6 @@
+venv/
+chaostoolkit.log
+__pycache__
+.env*
+!.env.example
+logs/
