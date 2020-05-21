@@ -1,17 +1,35 @@
 {
     "version": "1.0.0",
-    "title": "What is the impact of cluster issues on the application messages to be sent?",
-    "description": "",
+    "title": "What is the impact of node in the cluster going missing on the application messages?",
+    "description": "If a node in the cluster is down the message should still reach the queue",
     "secrets": {
-        "ssh": {
-            "remote_addr": "SSH_HOST",
-            "username": "SSH_USERNAME",
-            "password": "SSH_PASSWORD",
-            "port": "SSH_PORT"
+        "appssh": {
+            "remote_addr": "APP_SSH_HOST",
+            "username": "APP_SSH_USERNAME",
+            "password": "APP_SSH_PASSWORD",
+            "port": "APP_SSH_PORT"
+        },
+        "rabbitssh": {
+            "remote_addr": "RABBIT_SSH_HOST",
+            "username": "RABBIT_SSH_USERNAME",
+            "password": "RABBIT_SSH_PASSWORD",
+            "port": "RABBIT_SSH_PORT"
+        },
+        "rabbitmq": {
+            "rabbitmq_host": "RABBITMQ_HOST",
+            "rabbitmq_username": "RABBITMQ_USERNAME",
+            "rabbitmq_password": "RABBITMQ_PASSWORD",
+            "rabbitmq_restendpoint": "RABBITMQ_REST_ENDPOINT"
+        },
+        "rabbitssh2": {
+            "remote_addr": "RABBIT_SSH_HOST",
+            "username": "RABBIT_SSH_USERNAME",
+            "password": "RABBIT_SSH_PASSWORD",
+            "port": "RABBIT_SSH_PORT"
         }
     },
     "steady-state-hypothesis": {
-        "title": "RabbitMQ responds",
+        "title": "RabbitMQ responds as per application demands",
         "probes": [
             {
                 "type": "probe",
@@ -20,12 +38,47 @@
                 "provider": {
                     "type": "python",
                     "module": "rabbitmq",
-                    "secrets": ["ssh"],
+                    "secrets": ["rabbitssh"],
                     "func": "probe_running_rabbitmq_service"
+                }
+            },
+            {
+                "type": "probe",
+                "name": "the-app-can-connect-to-rabbit",
+                "tolerance": true,
+                "provider": {
+                    "type": "python",
+                    "module": "rabbitmq",
+                    "secrets": ["rabbitmq", "appssh"],
+                    "func": "probe_app_can_connect_and_send_message_to_rabbit"
                 }
             }
         ]
     },
     "method": [
+        {
+            "type": "action",
+            "name": "node-failure-in-rabbit-cluster",
+            "tolerance": true,
+            "provider": {
+                "type": "python",
+                "module": "rabbitmq",
+                "secrets": ["rabbitmq", "rabbitssh2"],
+                "func": "node_failure_in_rabbit_cluster"
+            }
+        }
+    ],
+    "rollbacks": [
+        {
+            "type": "action",
+            "name": "bring-back-node-in-rabbit-cluster",
+            "tolerance": true,
+            "provider": {
+                "type": "python",
+                "module": "rabbitmq",
+                "secrets": ["rabbitmq", "rabbitssh2"],
+                "func": "bring_back_node_in_rabbit_cluster"
+            }
+        }
     ]
 }
