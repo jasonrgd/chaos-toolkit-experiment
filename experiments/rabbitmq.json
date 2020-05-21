@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "title": "What is the impact of node in the cluster going missing on the application messages?",
-    "description": "If a node in the cluster is down the message should still reach the queue",
+    "description": "If a node in the cluster is down the message should still reach the queue and the cluster should be available.",
     "secrets": {
         "appssh": {
             "remote_addr": "APP_SSH_HOST",
